@@ -132,5 +132,5 @@ pub fn print_something() {
 
     writer.write_byte(b'H');
     writer.write_string("ello! ");
-    write!(writer, "The numbers are");
+    write!(writer, "The numbers are {} and {}", 42, 1.0/3.0).unwrap();
 }
