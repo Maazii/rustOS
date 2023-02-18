@@ -1,2 +1,1 @@
-# rustOS
-# rustOS
+Producing a minimal OS with Rust
