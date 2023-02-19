@@ -5,16 +5,18 @@ use core::panic::PanicInfo;
 
 mod vga_buffer;
 
-static HELLO: &[u8] = b"Hellllllllllllllllllloooo"; 
+static HELLO: &[u8] = b"Hellllllllllllllllllloooo";
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
-    vga_buffer::print_something();
-
+/// This function is called on panic.
+#[panic_handler]
+fn panic(info: &PanicInfo) -> ! {
+    println!("{}", info);
     loop {}
 }
 
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+#[no_mangle]
+pub extern "C" fn _start() {
+    println!("Hello World{}", "!");
+
     loop {}
 }
