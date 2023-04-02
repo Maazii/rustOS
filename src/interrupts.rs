@@ -11,9 +11,14 @@ lazy_static! {
         let mut idt = InterruptDescriptorTable::new();
         idt.breakpoint.set_handler_fn(breakpoint_handler);
         idt
-    }
+    };
 }
 
-pub fn init_idt(){
+#[test_case]
+fn test_breakpoint_exception() {
+    x86_64::instructions::interrupts::int3();
+}
+
+pub fn init_idt() {
     IDT.load();
 }
