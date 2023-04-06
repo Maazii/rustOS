@@ -13,7 +13,7 @@ use os::println;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    os::hlt_loop();
 }
 
 //this panic is called for testing environment.
@@ -30,22 +30,12 @@ fn trivial_assertion() {
 
 #[no_mangle]
 pub extern "C" fn _start() {
+    
     println!("Hello World{}", "!");
 
-    os::init();
+    os::init(); //start the global descriptor table;
 
-    //x86_64::instructions::interrupts::int3();
+    println!("Descriptor loaded!");
 
-    fn stack_overflow() {
-        stack_overflow();
-    }
-
-    stack_overflow();
-
-    #[cfg(test)]
-    test_main();
-
-    // our main
-    println!("Did not crash!");
-    loop {}
+    os::hlt_loop();
 }
