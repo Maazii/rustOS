@@ -29,13 +29,20 @@ fn trivial_assertion() {
 }
 
 #[no_mangle]
-pub extern "C" fn _start() {
-    
+pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
 
-    os::init(); //start the global descriptor table;
+    os::init();
 
-    println!("Descriptor loaded!");
+    use x86_64::registers::control::Cr3;
 
+    let (level_4_page_table, _) = Cr3::read();
+    println!("Start address for the level 4 page table is {:?}",level_4_page_table.start_address());
+
+    // as before
+    #[cfg(test)]
+    test_main();
+
+    println!("It did not crash!");
     os::hlt_loop();
 }
