@@ -28,16 +28,41 @@ fn trivial_assertion() {
     assert_eq!(1,1);
 }
 
+use bootloader::{BootInfo, entry_point};
+
+entry_point!(kernel_main);
+
 #[no_mangle]
-pub extern "C" fn _start() -> ! {
+fn kernel_main(boot_info: &'static BootInfo) -> ! {
+    use os::memory;
+    use x86_64::{structures::paging::Translate, VirtAddr};
+
     println!("Hello World{}", "!");
 
     os::init();
 
-    use x86_64::registers::control::Cr3;
+    let phys_mem_offset = VirtAddr::new(boot_info.physical_memory_offset);
 
-    let (level_4_page_table, _) = Cr3::read();
-    println!("Start address for the level 4 page table is {:?}",level_4_page_table.start_address());
+    let mapper = unsafe { memory::init(phys_mem_offset) };
+
+    //use x86_64::registers::control::Cr3;
+
+    let addresses = [
+        // the identity-mapped vga buffer page
+        0xb8000,
+        // some code page
+        0x201008,
+        // some stack page
+        0x0100_0020_1a10,
+        // virtual address mapped to physical address 0
+        boot_info.physical_memory_offset,
+    ];
+
+    for &address in &addresses {
+        let virt = VirtAddr::new(address);
+        let phys = mapper.translate_addr(virt);
+        println!("{:?} -> {:?}", virt, phys);
+    }
 
     // as before
     #[cfg(test)]
