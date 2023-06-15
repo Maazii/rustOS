@@ -1,16 +1,3 @@
-<style>
-  .frame{
-    border: 2px solid red;
-    border-radius: 15px;
-  }
-
-  .param{
-    border: 2px solid green;
-    border-radius: 15px;
-    padding: 10px;
-  }
-</style>
-
 # Producing a minimal [Operating System](https://en.wikipedia.org/wiki/Operating_system) using [Rust](https://en.wikipedia.org/wiki/Rust_(programming_language))
 
 ## References
